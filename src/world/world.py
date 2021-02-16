@@ -21,6 +21,16 @@ class Room:
         self.who_in = who_in
         self.special = special
 
+    def process_special(self):
+        if self.special == 'smell':
+            print('hmm, wumpus is nearby\n')
+        elif self.special == 'noise':
+            print('I AM BATMAN\n')
+        elif self.special == 'wind':
+            print('look under ur feet\n')
+        else:
+            pass
+
 
 class World(ABC):
     def __init__(self, room_count, way_count):
@@ -35,6 +45,11 @@ class World(ABC):
         for node in graph:
             self.rooms[node] = Room(node, [link for link in graph[node].keys()])
 
+    def fill_room(self, room, state, unit, special):
+        self.rooms[room].state = state
+        self.rooms[room].who_in = unit
+        self.rooms[room].special = special
+
     def fill_map(self):
         empty_rooms = list(self.rooms.keys())
         start_room = 0
@@ -42,9 +57,7 @@ class World(ABC):
             rand_room = random.choice(empty_rooms)
             if unit.name == 'player':
                 start_room = rand_room
-            self.rooms[rand_room].state = 'occupied'
-            self.rooms[rand_room].who_in = unit
-            self.rooms[rand_room].special = unit.special
+            self.fill_room(rand_room, 'occupied', unit, unit.special)
             empty_rooms.remove(rand_room)
 
         return start_room
@@ -71,7 +84,7 @@ class EasyWorld(World):
             Pit('pit', 'wind'),
             Pit('pit', 'wind'),
             Player('player', None, inventory),
-            Wumpus('wumpus', 'smell')
+            Wumpus('wumpus', 'smell', True)
         ]
 
 
