@@ -1,6 +1,7 @@
 from abc import ABC
 from typing import Any
 
+from src.utils.text_manager import TextManager
 from src.utils.exceptions import WonGame, LostGame
 
 
@@ -22,10 +23,10 @@ class Player(Unit):
         self.inventory = inventory
 
     def move(self):
-        pass
+        print(TextManager.player_moves())
 
     def attack(self):
-        pass
+        print(TextManager.player_attacks())
 
 
 class Wumpus(Unit):
@@ -34,10 +35,13 @@ class Wumpus(Unit):
         self.sleep = sleep
 
     def move(self):
-        pass
+        if self.sleep is True:
+            return True
+        return False
 
     def attack(self):
-        pass
+        print(TextManager.you_has_been_killed())
+        raise LostGame
 
 
 class Bat(Unit):
@@ -60,4 +64,5 @@ class Pit(Unit):
         pass
 
     def attack(self):
-        pass
+        print(TextManager.you_fell_down())
+        raise LostGame

@@ -50,8 +50,16 @@ class World(ABC):
         self.rooms[room].who_in = unit
         self.rooms[room].special = special
 
+    def get_empty_rooms(self):
+        empty_rooms = list()
+        for room in self.rooms:
+            if self.rooms[room].state == 'empty':
+                empty_rooms.append(room)
+
+        return empty_rooms
+
     def fill_map(self):
-        empty_rooms = list(self.rooms.keys())
+        empty_rooms = self.get_empty_rooms()
         start_room = 0
         for unit in self.unit_list:
             rand_room = random.choice(empty_rooms)
@@ -59,7 +67,6 @@ class World(ABC):
                 start_room = rand_room
             self.fill_room(rand_room, 'occupied', unit, unit.special)
             empty_rooms.remove(rand_room)
-
         return start_room
 
     def gen_units(self):

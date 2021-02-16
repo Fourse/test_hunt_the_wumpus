@@ -4,7 +4,7 @@ from src.world.world import EasyWorld
 from src.world.world import MediumWorld
 from src.world.world import HellWorld
 
-from src.utils.utils import TextManager
+from src.utils.text_manager import TextManager
 from src.utils.exceptions import EndGame
 
 
@@ -18,17 +18,44 @@ class GameLogic:
         self.world = world
         self.cur_room = cur_room
 
-    def _change_room_status(self):
-        pass
+    def _moving_between_rooms(self, _to, _from, who_in):
+        self.world.fill_room(
+            _to,
+            'occupied',
+            who_in,
+            who_in.special
+        )
+        self.world.fill_room(
+            _from,
+            "empty",
+            None,
+            None
+        )
 
     def check_cur_room(self):
         who_in = self.world.rooms[self.cur_room].who_in
         if who_in.name == 'wumpus':
-            pass
+            who_in.attack()
         elif who_in.name == 'bat':
-            pass
+            # мышь перетаскивает игрока в рандомную комнату, change self.cur_room
+            current_room = self.world.rooms[self.cur_room]
+            self.cur_room = random.choice(self.world.rooms.keys())
+            empty_rooms = self.world.get_empty_rooms()
+            self.world.fill_room(
+                random.choice(empty_rooms),
+                'occupied',
+                current_room.who_in,
+                current_room.who_in.special
+            )
+            self.world.fill_room(
+                current_room.number,
+                'empty',
+                None,
+                None
+            )
+            self._moving_between_rooms(random.choice(empty_rooms), current_room.number, current_room.who_in)
         elif who_in.name == 'pit':
-            pass
+            who_in.attack()
         else:
             # print('fuh, proneslo\n')
             pass
@@ -40,11 +67,29 @@ class GameLogic:
 
     def process_action(self):
         try:
+            print(f'You in {self.cur_room}\n'
+                  f'You see ways to {self.world.rooms[self.cur_room].ways_to} rooms')
             action = input(TextManager.await_action()).lower()
             if action == 'a':
-                pass
+                self.world.rooms[self.cur_room].who_in.attack()
             elif action == 'm':
-                pass
+                current_room = self.world.rooms[self.cur_room]
+                current_room.who_in.move()
+                inp = input(TextManager.where_you_go())
+                self.cur_room = inp
+                self.check_cur_room()
+                self.world.fill_room(
+                    self.cur_room,
+                    'occupied',
+                    current_room.who_in,
+                    current_room.who_in.special
+                )
+                self.world.fill_room(
+                    current_room.number,
+                    "empty",
+                    None,
+                    None
+                )
             else:
                 print(TextManager.give_try())
                 self.process_action()
@@ -100,7 +145,6 @@ class Game:
     def run(self):
         while True:
             try:
-                self.game_logic.check_cur_room()
                 self.game_logic.check_next_rooms()
                 self.game_logic.process_action()
                 # pass

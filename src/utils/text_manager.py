@@ -28,3 +28,23 @@ class TextManager:
     @staticmethod
     def start_game():
         return 'Nu, s bogom'
+
+    @staticmethod
+    def you_has_been_killed():
+        return 'You has been killed by Wumpus :('
+
+    @staticmethod
+    def you_fell_down():
+        return 'You fell down :('
+
+    @staticmethod
+    def player_moves():
+        return 'Moving...'
+
+    @staticmethod
+    def player_attacks():
+        return 'If only the bull`s-eye'
+
+    @staticmethod
+    def where_you_go():
+        return 'Where you go?\n'

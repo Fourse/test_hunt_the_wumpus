@@ -7,4 +7,4 @@ class WonGame(EndGame):
 
 
 class LostGame(EndGame):
-    pass
+    print('Better luck next time')
