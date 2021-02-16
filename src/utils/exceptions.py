@@ -7,4 +7,8 @@ class WonGame(EndGame):
 
 
 class LostGame(EndGame):
-    print('Better luck next time')
+    pass
+
+
+class WumpusDead(Exception):
+    pass

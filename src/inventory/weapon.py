@@ -7,6 +7,6 @@ class Weapon(ABC):
 
 
 class Bow(Weapon):
-    def __init__(self, name):
-        super().__init__(name)
+    def __init__(self):
+        super().__init__(name='bow')
         self.arrows = 5

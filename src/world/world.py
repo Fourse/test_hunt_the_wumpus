@@ -36,7 +36,7 @@ class World(ABC):
     def __init__(self):
         self.room_count = 20
         self.way_count = 3
-        self.player_inventory = dict()
+        self.player_inventory = {}
         self.unit_list = None
         self.rooms = {}
 
@@ -81,7 +81,7 @@ class EasyWorld(World):
         super().__init__()
 
     def gen_units(self):
-        self.player_inventory['weapon'] = Bow
+        self.player_inventory['weapon'] = Bow()
         self.create_unit_list(self.player_inventory)
 
     def create_unit_list(self, inventory):
@@ -100,7 +100,7 @@ class MediumWorld(World):
         super().__init__()
 
     def gen_units(self):
-        self.player_inventory['weapon'] = Bow
+        self.player_inventory['weapon'] = Bow()
         self.create_unit_list(self.player_inventory)
 
     def create_unit_list(self, inventory):

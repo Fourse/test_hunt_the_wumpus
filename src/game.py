@@ -7,6 +7,7 @@ from src.world.world import HellWorld
 
 from src.utils.text_manager import TextManager
 from src.utils.exceptions import EndGame
+from src.utils.exceptions import WumpusDead
 
 
 def quit_game():
@@ -53,6 +54,18 @@ class GameLogic:
         except AttributeError:
             pass
 
+    def attack_wumpus(self, room_number):
+        try:
+            if self.world.rooms[room_number].who_in.name == 'wumpus':
+                self.world.rooms[room_number].who_in.alive = False
+                print(TextManager.won_the_game())
+                raise WumpusDead
+            else:
+                # TODO unsleep wumpus and pust` gulyaet
+                pass
+        except AttributeError:
+            pass
+
     def check_next_rooms(self):
         next_rooms = self.world.rooms[self.cur_room].ways_to
         for room in next_rooms:
@@ -60,14 +73,14 @@ class GameLogic:
 
     def process_action(self):
         try:
-            print(f'You in {self.cur_room}\n'
-                  f'You see ways to {self.world.rooms[self.cur_room].ways_to} rooms')
+            print(TextManager.where_i_am(self.cur_room, self.world.rooms[self.cur_room].ways_to))
             action = input(TextManager.await_action()).lower()
+            current_room = self.world.rooms[self.cur_room]
             if action == 'a':
-                self.world.rooms[self.cur_room].who_in.attack()
-                # TODO attacking
+                inp = int(input(TextManager.where_you_shooting()))
+                self.attack_wumpus(inp)
+                current_room.who_in.attack()
             elif action == 'm':
-                current_room = self.world.rooms[self.cur_room]
                 current_room.who_in.move()
                 inp = int(input(TextManager.where_you_go()))
                 self.cur_room = inp
@@ -135,9 +148,11 @@ class Game:
                 subprocess.call("clear")
                 self.game_logic.check_next_rooms()
                 self.game_logic.process_action()
-                # pass
             except KeyboardInterrupt:
                 quit_game()
             except EndGame:
                 print('oooooops')
+                break
+            except WumpusDead:
+                print('HELL YEAH')
                 break
