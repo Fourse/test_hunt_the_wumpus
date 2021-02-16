@@ -26,7 +26,7 @@ class World(ABC):
     def __init__(self, room_count, way_count):
         self.room_count = room_count
         self.way_count = way_count
-        self.player_inventory = list()
+        self.player_inventory = dict()
         self.unit_list = None
         self.rooms = {}
 
@@ -43,7 +43,7 @@ class World(ABC):
             if unit.name == 'player':
                 start_room = rand_room
             self.rooms[rand_room].state = 'occupied'
-            self.rooms[rand_room].who_in = unit.name
+            self.rooms[rand_room].who_in = unit
             self.rooms[rand_room].special = unit.special
             empty_rooms.remove(rand_room)
 
@@ -61,7 +61,7 @@ class EasyWorld(World):
         super().__init__(room_count, way_count)
 
     def gen_units(self):
-        self.player_inventory.append(Bow)
+        self.player_inventory['weapon'] = Bow
         self.create_unit_list(self.player_inventory)
 
     def create_unit_list(self, inventory):
@@ -80,7 +80,7 @@ class MediumWorld(World):
         super().__init__(room_count, way_count)
 
     def gen_units(self):
-        self.player_inventory.append(Bow)
+        self.player_inventory['weapon'] = Bow
         self.create_unit_list(self.player_inventory)
 
     def create_unit_list(self, inventory):
@@ -100,7 +100,7 @@ class HellWorld(World):
         super().__init__(room_count, way_count)
 
     def gen_units(self):
-        self.player_inventory.append(Bow)
+        self.player_inventory['weapon'] = Bow
         self.create_unit_list(self.player_inventory)
 
     def create_unit_list(self, inventory):

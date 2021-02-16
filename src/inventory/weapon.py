@@ -9,3 +9,4 @@ class Weapon(ABC):
 class Bow(Weapon):
     def __init__(self, name):
         super().__init__(name)
+        self.arrows = 5
