@@ -33,9 +33,9 @@ class Room:
 
 
 class World(ABC):
-    def __init__(self, room_count, way_count):
-        self.room_count = room_count
-        self.way_count = way_count
+    def __init__(self):
+        self.room_count = 20
+        self.way_count = 3
         self.player_inventory = dict()
         self.unit_list = None
         self.rooms = {}
@@ -77,8 +77,8 @@ class World(ABC):
 
 
 class EasyWorld(World):
-    def __init__(self, room_count, way_count):
-        super().__init__(room_count, way_count)
+    def __init__(self):
+        super().__init__()
 
     def gen_units(self):
         self.player_inventory['weapon'] = Bow
@@ -96,8 +96,8 @@ class EasyWorld(World):
 
 
 class MediumWorld(World):
-    def __init__(self, room_count, way_count):
-        super().__init__(room_count, way_count)
+    def __init__(self):
+        super().__init__()
 
     def gen_units(self):
         self.player_inventory['weapon'] = Bow
@@ -116,8 +116,8 @@ class MediumWorld(World):
 
 
 class HellWorld(World):
-    def __init__(self, room_count, way_count):
-        super().__init__(room_count, way_count)
+    def __init__(self):
+        super().__init__()
 
     def gen_units(self):
         self.player_inventory['weapon'] = Bow

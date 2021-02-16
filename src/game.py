@@ -1,4 +1,5 @@
 import random
+import subprocess
 
 from src.world.world import EasyWorld
 from src.world.world import MediumWorld
@@ -64,6 +65,7 @@ class GameLogic:
             action = input(TextManager.await_action()).lower()
             if action == 'a':
                 self.world.rooms[self.cur_room].who_in.attack()
+                # TODO attacking
             elif action == 'm':
                 current_room = self.world.rooms[self.cur_room]
                 current_room.who_in.move()
@@ -108,13 +110,13 @@ class Game:
     @staticmethod
     def _create_world(difficulty):
         if difficulty == 'easy':
-            world = EasyWorld(20, 3)
+            world = EasyWorld()
         elif difficulty == 'medium':
-            world = MediumWorld(20, 3)
+            world = MediumWorld()
         elif difficulty == 'hell':
-            world = HellWorld(20, 3)
+            world = HellWorld()
         else:
-            world = EasyWorld(20, 3)
+            world = EasyWorld()
         return world
 
     def prepare_game(self):
@@ -130,6 +132,7 @@ class Game:
     def run(self):
         while True:
             try:
+                subprocess.call("clear")
                 self.game_logic.check_next_rooms()
                 self.game_logic.process_action()
                 # pass
