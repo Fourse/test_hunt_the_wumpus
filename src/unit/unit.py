@@ -49,7 +49,7 @@ class Bat(Unit):
         super().__init__(name, special)
 
     def move(self):
-        pass
+        print(TextManager.fly_with_bat())
 
     def attack(self):
         pass

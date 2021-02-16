@@ -48,3 +48,7 @@ class TextManager:
     @staticmethod
     def where_you_go():
         return 'Where you go?\n'
+
+    @staticmethod
+    def fly_with_bat():
+        return 'I believe I can fly!'

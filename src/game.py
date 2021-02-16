@@ -33,31 +33,23 @@ class GameLogic:
         )
 
     def check_cur_room(self):
-        who_in = self.world.rooms[self.cur_room].who_in
-        if who_in.name == 'wumpus':
-            who_in.attack()
-        elif who_in.name == 'bat':
-            # мышь перетаскивает игрока в рандомную комнату, change self.cur_room
-            current_room = self.world.rooms[self.cur_room]
-            self.cur_room = random.choice(self.world.rooms.keys())
-            empty_rooms = self.world.get_empty_rooms()
-            self.world.fill_room(
-                random.choice(empty_rooms),
-                'occupied',
-                current_room.who_in,
-                current_room.who_in.special
-            )
-            self.world.fill_room(
-                current_room.number,
-                'empty',
-                None,
-                None
-            )
-            self._moving_between_rooms(random.choice(empty_rooms), current_room.number, current_room.who_in)
-        elif who_in.name == 'pit':
-            who_in.attack()
-        else:
-            # print('fuh, proneslo\n')
+        current_room = self.world.rooms[self.cur_room]
+        try:
+            if current_room.who_in.name == 'wumpus':
+                current_room.who_in.attack()
+            elif current_room.who_in.name == 'bat':
+                current_room.who_in.move()
+                empty_rooms = self.world.get_empty_rooms()
+                self._moving_between_rooms(
+                    random.choice(empty_rooms),
+                    current_room.number,
+                    current_room.who_in
+                )
+                self.cur_room = random.choice(list(self.world.rooms.keys()))
+                self.check_cur_room()
+            elif current_room.who_in.name == 'pit':
+                current_room.who_in.attack()
+        except AttributeError:
             pass
 
     def check_next_rooms(self):
@@ -75,20 +67,13 @@ class GameLogic:
             elif action == 'm':
                 current_room = self.world.rooms[self.cur_room]
                 current_room.who_in.move()
-                inp = input(TextManager.where_you_go())
+                inp = int(input(TextManager.where_you_go()))
                 self.cur_room = inp
                 self.check_cur_room()
-                self.world.fill_room(
+                self._moving_between_rooms(
                     self.cur_room,
-                    'occupied',
-                    current_room.who_in,
-                    current_room.who_in.special
-                )
-                self.world.fill_room(
                     current_room.number,
-                    "empty",
-                    None,
-                    None
+                    current_room.who_in
                 )
             else:
                 print(TextManager.give_try())
