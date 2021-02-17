@@ -15,14 +15,15 @@ class Room:
         self.who_in = who_in
 
     def process_who_in_special(self, display):
-        if self.who_in is None:
+        try:
+            if self.who_in.special == 'smell':
+                display.add_data('Smell like a stinky socks...')
+            elif self.who_in.special == 'noise':
+                display.add_data('It`s because: I AM BATMAN')
+            elif self.who_in.special == 'wind':
+                display.add_data('Watch your step')
+        except AttributeError:
             return
-        if self.who_in.special == 'smell':
-            pass
-        elif self.who_in.special == 'noise':
-            pass
-        elif self.who_in.special == 'wind':
-            pass
 
 
 class World:

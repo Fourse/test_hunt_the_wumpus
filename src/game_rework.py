@@ -8,20 +8,25 @@ from src.exceptions.exceptions import LostGame
 
 class GameLogic:
     def process_action(self, world, display):
+        display.add_data(f'{"-" * 59}')
+        display.add_data('Attack [a] or Move [m]?')
         action = display.await_input()
-        if action == 'move':
+        if action == 'm':
             self.move(world, display)
-        elif action == 'attack':
+        elif action == 'a':
             self.attack(world, display)
 
     def move(self, world, display):
-        pass
+        display.change_last_data('Where you go?')
+        room = display.await_input()
 
     def attack(self, world, display):
-        pass
+        print('aga')
+        raise WonGame
 
     def check_cur_room(self, world, display):
-        pass
+        display.add_data(f'You in {world.player_pos}')
+        display.add_data(f'Paths in the room lead to rooms: {world.rooms[world.player_pos].ways_to}')
 
     @staticmethod
     def check_next_rooms(world, display):
@@ -48,13 +53,16 @@ class Game:
         game_logic = GameLogic()
         while True:
             try:
+                game_logic.check_cur_room(self.world, self.display)
                 game_logic.check_next_rooms(self.world, self.display)
                 game_logic.process_action(self.world, self.display)
             except KeyboardInterrupt:
                 exit(0)
             except WonGame:
-                self.display.end_game('won', 'some msg')
+                self.display.clear()
+                print('Congrats dude')
                 break
             except LostGame:
-                self.display.end_game('lost', 'some msg')
+                self.display.clear()
+                print('WASTED')
                 break

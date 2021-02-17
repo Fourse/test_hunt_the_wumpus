@@ -1,12 +1,13 @@
-from src.game import Game
-
-
-# if __name__ == '__main__':
-#     game = Game()
-#     game.run()
+from src.game_rework import Game
 
 
 if __name__ == '__main__':
-    from  src.display.display_rework import Display
+    game = Game()
+    game.load_game()
+    game.run()
 
-    Display()
+
+# if __name__ == '__main__':
+#     from  src.display.display_rework import Display
+#
+#     Display()
