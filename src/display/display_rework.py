@@ -54,9 +54,9 @@ class Display:
     def await_input(self):
         self.render_display()
         user_input = input(self.msg)
-        if user_input == 'qq':
+        if user_input == 'q':
             raise KeyboardInterrupt
-        self.clear_msg()
+        # self.clear_msg()
         return user_input
 
     def clear_msg(self):
@@ -65,7 +65,7 @@ class Display:
             f'{"-" * 59}',
             f'{" " * 21}HUNT THE WUMPUS{" " * 22}',
             f'{"-" * 59}',
-            f'         [qq] - quit   [a] - attack   [m] - move',
+            f'          [q] - quit   [a] - attack   [m] - move',
             f'{"-" * 59}',
         ]
         self.msg = ""
@@ -75,3 +75,4 @@ class Display:
 
     def change_last_data(self, data):
         self.data[-1] = data
+        self.msg = ""

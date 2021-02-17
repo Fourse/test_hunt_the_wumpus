@@ -15,10 +15,21 @@ class GameLogic:
             self.move(world, display)
         elif action == 'a':
             self.attack(world, display)
+        else:
+            pass
 
     def move(self, world, display):
         display.change_last_data('Where you go?')
         room = display.await_input()
+        try:
+            room = int(room)
+        except ValueError:
+            self.move(world, display)
+        self.process_move(world, display)
+        display.clear_msg()
+
+    def process_move(self, world, display):
+        world.rooms[world.player_pos].who_in.action('move')
 
     def attack(self, world, display):
         print('aga')
@@ -56,6 +67,7 @@ class Game:
                 game_logic.check_cur_room(self.world, self.display)
                 game_logic.check_next_rooms(self.world, self.display)
                 game_logic.process_action(self.world, self.display)
+                self.display.clear_msg()
             except KeyboardInterrupt:
                 exit(0)
             except WonGame:
