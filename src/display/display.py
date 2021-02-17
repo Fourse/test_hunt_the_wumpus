@@ -69,3 +69,7 @@ class TextManager:
     @staticmethod
     def empty_quiver():
         return 'You lost, cause ur quiver is empty :(\n'
+
+    @staticmethod
+    def missed_shot():
+        return 'Oops, you wasted your arrow :(\n'

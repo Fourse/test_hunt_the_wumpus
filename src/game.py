@@ -5,9 +5,9 @@ from src.world.world import EasyWorld
 from src.world.world import MediumWorld
 from src.world.world import HellWorld
 
-from src.utils.text_manager import TextManager
-from src.utils.exceptions import EndGame
-from src.utils.exceptions import WumpusDead
+from src.display.display import TextManager
+from src.exceptions.exceptions import EndGame
+from src.exceptions.exceptions import WumpusDead
 
 
 def quit_game():
@@ -54,7 +54,7 @@ class GameLogic:
         except AttributeError:
             pass
 
-    def attack_wumpus(self, room_number):
+    def attack(self, room_number):
         try:
             if self.world.rooms[room_number].who_in.name == 'wumpus':
                 self.world.rooms[room_number].who_in.alive = False
@@ -64,7 +64,7 @@ class GameLogic:
                 # TODO unsleep wumpus and pust` gulyaet
                 pass
         except AttributeError:
-            pass
+            print(TextManager.missed_shot())
 
     def check_next_rooms(self):
         next_rooms = self.world.rooms[self.cur_room].ways_to
@@ -78,7 +78,7 @@ class GameLogic:
             current_room = self.world.rooms[self.cur_room]
             if action == 'a':
                 inp = int(input(TextManager.where_you_shooting()))
-                self.attack_wumpus(inp)
+                self.attack(inp)
                 current_room.who_in.attack()
             elif action == 'm':
                 current_room.who_in.move()
@@ -104,13 +104,13 @@ class Game:
     def _choose_difficulty(self):
         ok_status = ['easy', 'medium', 'hell']
         try:
-            diff = input(TextManager.choose_difficulty()).lower()
-            if diff in ok_status:
-                return diff
-            elif diff == 'h' or diff == 'help':
+            inp = input(TextManager.choose_difficulty()).lower()
+            if inp in ok_status:
+                return inp
+            elif inp == 'h' or inp == 'help':
                 print(TextManager.game_rules())
                 self._choose_difficulty()
-            elif diff == 'q':
+            elif inp == 'q':
                 quit_game()
             else:
                 raise ValueError

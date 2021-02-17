@@ -1,9 +1,7 @@
 from abc import ABC
-from typing import Any
 
-from src.utils.text_manager import TextManager
-from src.utils.exceptions import WonGame, LostGame
-from src.utils.exceptions import WumpusDead
+from src.display.display import TextManager
+from src.exceptions.exceptions import LostGame
 
 
 class Unit(ABC):

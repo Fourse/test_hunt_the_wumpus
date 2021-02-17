@@ -1,7 +1,6 @@
 import random
 
 from abc import ABC
-from typing import Any
 
 import networkx as nx
 
@@ -61,6 +60,7 @@ class World(ABC):
     def fill_map(self):
         empty_rooms = self.get_empty_rooms()
         start_room = 0
+        # unit_list = self.gen_units
         for unit in self.unit_list:
             rand_room = random.choice(empty_rooms)
             if unit.name == 'player':
@@ -72,7 +72,7 @@ class World(ABC):
     def gen_units(self):
         raise NotImplementedError
 
-    def create_unit_list(self, any: Any):
+    def create_unit_list(self, inventory):
         raise NotImplementedError
 
 
