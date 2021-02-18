@@ -1,75 +1,94 @@
-class TextManager:
-    @staticmethod
-    def game_rules():
-        return 'Some rules'
+import subprocess
+
+
+class Display:
+    def __init__(self):
+        self.main_data = []
+        self.footer = []
+        self.msg = ""
+        self.start_game()
+
+    def help_menu(self):
+        pass
+
+    def rules(self):
+        self.main_data = [
+            f'{"-" * 59}',
+            f'{" " * 21}HUNT THE WUMPUS{" " * 22}',
+            f'{"-" * 59}',
+            'The Wumpus lives in cave of 20 rooms.',
+            'Each room has 3 tunnels leading to other rooms.',
+            'Hazards:',
+            'Bottomless pits - two rooms have bottomless pits in them.',
+            'If you go there, you fall into the pit and lose.',
+            'Super bats - two other rooms have super bats.',
+            'If you go there,',
+            'a bat grabs you and takes you to some other room at random',
+            '(Which may be troublesome).',
+            'You should kill Wumpus, but you have only 5 arrows...',
+            'Good luck!'
+        ]
+        self.footer = [
+            f'{"-" * 59}',
+            'Press Enter if you ready: '
+        ]
+
+    def start_game(self):
+        self.rules()
+        while self.await_input() != "":
+            self.msg = ""
+            pass
+        self.clear_main()
+        self.clear_footer()
 
     @staticmethod
-    def choose_difficulty():
-        return 'Please, choose difficulty\n' \
-               'Easy - standard game set`tings\n' \
-               'Medium - more fear and horror\n' \
-               'HELL - ...\n' \
-               'Or you caught quit - just type "q"\n' \
-               'Or remember rules - "h/help"\n'
+    def clear():
+        subprocess.call("clear")
 
-    @staticmethod
-    def await_action():
-        return 'Attack [A]?\n' \
-               'Move [M]?\n'
+    def create_msg(self):
+        for data in self.main_data:
+            text_len = len(data)
+            spaces = 1
+            self.msg += f'|{" " * 1}{data}{" " * (60 - (text_len + spaces))}|\n'
+        for foot in self.footer:
+            text_len = len(foot)
+            spaces = 1
+            self.msg += f'|{" " * 1}{foot}{" " * (60 - (text_len + spaces))}|\n'
 
-    @staticmethod
-    def quit():
-        return 'Nu poka :(\n'
+    def render_display(self):
+        self.clear()
+        self.create_msg()
 
-    @staticmethod
-    def give_try():
-        return 'Try again, dude\n'
+    def await_input(self):
+        self.render_display()
+        user_input = input(self.msg)
+        if user_input == 'q':
+            raise KeyboardInterrupt
+        self.clear_footer()
+        return user_input
 
-    @staticmethod
-    def start_game():
-        return 'Nu, s bogom\n'
+    def clear_footer(self):
+        self.footer.clear()
+        self.footer = [
+            f'{"-" * 59}',
+            ''
+        ]
+        self.msg = ""
 
-    @staticmethod
-    def you_has_been_killed():
-        return 'You has been killed by Wumpus :(\n'
+    def clear_main(self):
+        self.main_data.clear()
+        self.main_data = [
+            f'{"-" * 59}',
+            f'{" " * 21}HUNT THE WUMPUS{" " * 22}',
+            f'{"-" * 59}',
+            f'{"-" * 10}[q] - quit   [a] - attack   [m] - move{"-" * 10}',
+            f'{"-" * 59}',
+        ]
+        self.msg = ""
 
-    @staticmethod
-    def you_fell_down():
-        return 'You fell down :(\n'
+    def change_main_data(self, data):
+        self.main_data.append(data)
 
-    @staticmethod
-    def player_moves():
-        return 'Moving...\n'
-
-    @staticmethod
-    def player_attacks():
-        return 'If only the bull`s-eye\n'
-
-    @staticmethod
-    def where_you_go():
-        return 'Where you go?\n'
-
-    @staticmethod
-    def where_you_shooting():
-        return 'Where you shooting?\n'
-
-    @staticmethod
-    def fly_with_bat():
-        return 'I believe I can fly!\n'
-
-    @staticmethod
-    def where_i_am(cur_room, ways_to):
-        return f'You in {cur_room}\n' \
-               f'You see ways to {ways_to} rooms\n'
-
-    @staticmethod
-    def won_the_game():
-        return 'Congrats, you killed Wumpus!\n'
-
-    @staticmethod
-    def empty_quiver():
-        return 'You lost, cause ur quiver is empty :(\n'
-
-    @staticmethod
-    def missed_shot():
-        return 'Oops, you wasted your arrow :(\n'
+    def change_footer(self, data):
+        self.footer[-1] = data
+        self.msg = ""

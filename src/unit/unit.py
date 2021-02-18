@@ -1,7 +1,10 @@
+import time
 from abc import ABC
 
-from src.display.display import TextManager
+from src.exceptions.exceptions import WonGame
 from src.exceptions.exceptions import LostGame
+
+from src.inventory.weapon import Bow
 
 
 class Unit(ABC):
@@ -9,70 +12,59 @@ class Unit(ABC):
         self.name = name
         self.special = special
 
-    def move(self):
-        raise NotImplementedError
-
-    def attack(self):
+    def action(self, action):
         raise NotImplementedError
 
 
 class Player(Unit):
-    def __init__(self, name, special, inventory):
+    def __init__(self, name, special):
         super().__init__(name, special)
-        self.inventory = inventory
+        self.inventory = {}
+        self.inventory_interaction()
 
-    def move(self):
-        print(TextManager.player_moves())
+    def inventory_interaction(self):
+        self.inventory['weapon'] = Bow()
 
-    def attack(self):
-        print(TextManager.player_attacks())
-        if self.inventory['weapon'].name == 'bow':
+    def action(self, action):
+        if action == 'move':
+            print('Ok, let`s go..')
+            time.sleep(1)
+        elif action == 'attack':
+            print('Pulling the string..')
             self.inventory['weapon'].arrows -= 1
-            if self.inventory['weapon'].arrows == 0:
-                print(TextManager.empty_quiver())
-                raise LostGame
+            time.sleep(1)
 
 
 class Wumpus(Unit):
-    def __init__(self, name, special, sleep=True):
+    def __init__(self, name, special):
         super().__init__(name, special)
-        self.sleep = sleep
-        self.alive = True
+        self.sleep = True
 
-    def move(self):
-        if self.sleep is True:
-            return True
-        return False
-
-    def attack(self):
-        print(TextManager.you_has_been_killed())
-        raise LostGame
-
-    def __del__(self):
-        if self.alive is False:
-            print('AAAARGH')
-            print(TextManager.won_the_game())
+    def action(self, action):
+        if action == 'move':
+            print()
+        elif action == 'attack':
+            print('Hmm, lunch')
+            time.sleep(1)
+            raise LostGame
 
 
 class Bat(Unit):
     def __init__(self, name, special):
         super().__init__(name, special)
 
-    def move(self):
-        print(TextManager.fly_with_bat())
-
-    def attack(self):
-        pass
+    def action(self, action):
+        print('I believe, I can fly')
+        time.sleep(1)
+        print('Oh, where I am?')
+        time.sleep(1)
 
 
 class Pit(Unit):
-    # yeah, it`s unit too
     def __init__(self, name, special):
         super().__init__(name, special)
 
-    def move(self):
-        pass
-
-    def attack(self):
-        print(TextManager.you_fell_down())
+    def action(self, action):
+        print('AAAAAAAAAAaaaaaa')
+        time.sleep(1)
         raise LostGame

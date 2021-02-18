@@ -1,7 +1,5 @@
 import random
 
-from abc import ABC
-
 import networkx as nx
 
 from src.unit.unit import Player
@@ -9,45 +7,54 @@ from src.unit.unit import Wumpus
 from src.unit.unit import Bat
 from src.unit.unit import Pit
 
-from src.inventory.weapon import Bow
-
 
 class Room:
-    def __init__(self, number, ways_to, state="empty", who_in=None, special=None):
-        self.number = number
+    def __init__(self, ways_to, state="empty", who_in=None):
         self.ways_to = ways_to
         self.state = state
         self.who_in = who_in
-        self.special = special
 
-    def process_special(self):
-        if self.special == 'smell':
-            print('hmm, wumpus is nearby\n')
-        elif self.special == 'noise':
-            print('I AM BATMAN\n')
-        elif self.special == 'wind':
-            print('look under ur feet\n')
-        else:
-            pass
+    def process_who_in_special(self, display):
+        try:
+            if self.who_in.special == 'smell':
+                display.change_main_data('Smell like a stinky socks...')
+            elif self.who_in.special == 'noise':
+                display.change_main_data('It`s because: I AM BATMAN')
+            elif self.who_in.special == 'wind':
+                display.change_main_data('Watch your step')
+        except AttributeError:
+            return
 
 
-class World(ABC):
+class World:
     def __init__(self):
-        self.room_count = 20
-        self.way_count = 3
-        self.player_inventory = {}
-        self.unit_list = None
+        self.player_pos = 0
+        self.wumpus_pos = 0
         self.rooms = {}
+        self.unit_list = [
+            Bat('bat', 'noise'),
+            Bat('bat', 'noise'),
+            Pit('pit', 'wind'),
+            Pit('pit', 'wind'),
+            Player('player', None),
+            Wumpus('wumpus', 'smell')
+        ]
 
     def gen_map(self):
         graph = nx.random_regular_graph(3, 20)
         for node in graph:
-            self.rooms[node] = Room(node, [link for link in graph[node].keys()])
+            self.rooms[node] = Room(ways_to=[link for link in graph[node].keys()])
 
-    def fill_room(self, room, state, unit, special):
-        self.rooms[room].state = state
-        self.rooms[room].who_in = unit
-        self.rooms[room].special = special
+    def fill_map(self):
+        empty_rooms = self.get_empty_rooms()
+        for unit in self.unit_list:
+            rand_room = random.choice(empty_rooms)
+            if unit.name == 'player':
+                self.player_pos = rand_room
+            elif unit.name == 'wumpus':
+                self.wumpus_pos = rand_room
+            self.fill_room(rand_room, 'occupied', unit)
+            empty_rooms.remove(rand_room)
 
     def get_empty_rooms(self):
         empty_rooms = list()
@@ -57,82 +64,6 @@ class World(ABC):
 
         return empty_rooms
 
-    def fill_map(self):
-        empty_rooms = self.get_empty_rooms()
-        start_room = 0
-        # unit_list = self.gen_units
-        for unit in self.unit_list:
-            rand_room = random.choice(empty_rooms)
-            if unit.name == 'player':
-                start_room = rand_room
-            self.fill_room(rand_room, 'occupied', unit, unit.special)
-            empty_rooms.remove(rand_room)
-        return start_room
-
-    def gen_units(self):
-        raise NotImplementedError
-
-    def create_unit_list(self, inventory):
-        raise NotImplementedError
-
-
-class EasyWorld(World):
-    def __init__(self):
-        super().__init__()
-
-    def gen_units(self):
-        self.player_inventory['weapon'] = Bow()
-        self.create_unit_list(self.player_inventory)
-
-    def create_unit_list(self, inventory):
-        self.unit_list = [
-            Bat('bat', 'noise'),
-            Bat('bat', 'noise'),
-            Pit('pit', 'wind'),
-            Pit('pit', 'wind'),
-            Player('player', None, inventory),
-            Wumpus('wumpus', 'smell', True)
-        ]
-
-
-class MediumWorld(World):
-    def __init__(self):
-        super().__init__()
-
-    def gen_units(self):
-        self.player_inventory['weapon'] = Bow()
-        self.create_unit_list(self.player_inventory)
-
-    def create_unit_list(self, inventory):
-        self.unit_list = [
-            Bat('bat', 'noise'),
-            Bat('bat', 'noise'),
-            Pit('pit', 'wind'),
-            Pit('pit', 'wind'),
-            Pit('pit', 'wind'),
-            Player('player', None, inventory),
-            Wumpus('wumpus', 'smell')
-        ]
-
-
-class HellWorld(World):
-    def __init__(self):
-        super().__init__()
-
-    def gen_units(self):
-        self.player_inventory['weapon'] = Bow
-        self.create_unit_list(self.player_inventory)
-
-    def create_unit_list(self, inventory):
-        self.unit_list = [
-            Bat('bat', 'noise'),
-            Bat('bat', 'noise'),
-            Bat('bat', 'noise'),
-            Bat('bat', 'noise'),
-            Pit('pit', 'wind'),
-            Pit('pit', 'wind'),
-            Pit('pit', 'wind'),
-            Pit('pit', 'wind'),
-            Player('player', None, inventory),
-            Wumpus('wumpus', 'smell')
-        ]
+    def fill_room(self, room, state, unit):
+        self.rooms[room].state = state
+        self.rooms[room].who_in = unit
