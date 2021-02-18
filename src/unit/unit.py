@@ -41,7 +41,8 @@ class Wumpus(Unit):
 
     def action(self, action):
         if action == 'move':
-            print()
+            # TODO wumpus moving
+            pass
         elif action == 'attack':
             print('Hmm, lunch')
             time.sleep(1)
