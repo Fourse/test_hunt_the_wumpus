@@ -17,11 +17,11 @@ class Room:
     def process_who_in_special(self, display):
         try:
             if self.who_in.special == 'smell':
-                display.add_data('Smell like a stinky socks...')
+                display.change_main_data('Smell like a stinky socks...')
             elif self.who_in.special == 'noise':
-                display.add_data('It`s because: I AM BATMAN')
+                display.change_main_data('It`s because: I AM BATMAN')
             elif self.who_in.special == 'wind':
-                display.add_data('Watch your step')
+                display.change_main_data('Watch your step')
         except AttributeError:
             return
 

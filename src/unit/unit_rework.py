@@ -1,3 +1,4 @@
+import time
 from abc import ABC
 
 from src.exceptions.exceptions import WonGame
@@ -19,31 +20,31 @@ class Player(Unit):
     def __init__(self, name, special):
         super().__init__(name, special)
         self.inventory = {}
-        self.alive = True
 
     def inventory_interaction(self):
         self.inventory['weapon'] = Bow()
 
     def action(self, action):
-        pass
-
-    def __del__(self):
-        if self.alive is False:
-            raise LostGame
+        if action == 'move':
+            print('Ok, let`s go..')
+            time.sleep(1)
+        elif action == 'attack':
+            print('Pulling the string..')
+            time.sleep(1)
 
 
 class Wumpus(Unit):
     def __init__(self, name, special):
         super().__init__(name, special)
         self.sleep = True
-        self.alive = True
 
     def action(self, action):
-        pass
-
-    def __del__(self):
-        if self.alive is False:
-            raise WonGame
+        if action == 'move':
+            print()
+        elif action == 'attack':
+            print('Hmm, lunch')
+            time.sleep(1)
+            raise LostGame
 
 
 class Bat(Unit):
@@ -51,7 +52,10 @@ class Bat(Unit):
         super().__init__(name, special)
 
     def action(self, action):
-        pass
+        print('I believe, I can fly')
+        time.sleep(1)
+        print('Oh, where I am?')
+        time.sleep(1)
 
 
 class Pit(Unit):
@@ -59,4 +63,6 @@ class Pit(Unit):
         super().__init__(name, special)
 
     def action(self, action):
-        pass
+        print('AAAAAAAAAAaaaaaa')
+        time.sleep(1)
+        raise LostGame
