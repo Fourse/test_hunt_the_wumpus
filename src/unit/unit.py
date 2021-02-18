@@ -1,7 +1,6 @@
 import time
 from abc import ABC
 
-from src.exceptions.exceptions import WonGame
 from src.exceptions.exceptions import LostGame
 
 from src.inventory.weapon import Bow

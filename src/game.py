@@ -28,11 +28,11 @@ class GameLogic:
             room = int(room)
             if room not in world.rooms[world.player_pos].ways_to:
                 raise ValueError
-            self.process_move(world, room)
+            self._process_move(world, room)
         except ValueError:
             self.move(world, display)
 
-    def process_move(self, world, room):
+    def _process_move(self, world, room):
         world.rooms[world.player_pos].who_in.action('move')
         where_go = world.rooms[room]
         try:
@@ -72,12 +72,12 @@ class GameLogic:
             room = int(room)
             if room not in world.rooms[world.player_pos].ways_to:
                 raise ValueError
-            self.process_attack(world, room)
+            self._process_attack(world, room)
         except ValueError:
             self.attack(world, display)
 
     @staticmethod
-    def process_attack(world, room):
+    def _process_attack(world, room):
         world.rooms[world.player_pos].who_in.action('attack')
         if room == world.wumpus_pos:
             raise WonGame

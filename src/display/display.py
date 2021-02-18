@@ -11,7 +11,7 @@ class Display:
     def help_menu(self):
         pass
 
-    def rules(self):
+    def _rules(self):
         self.main_data = [
             f'{"-" * 59}',
             f'{" " * 21}HUNT THE WUMPUS{" " * 22}',
@@ -34,7 +34,7 @@ class Display:
         ]
 
     def start_game(self):
-        self.rules()
+        self._rules()
         while self.await_input() != "":
             self.msg = ""
             pass
@@ -45,7 +45,7 @@ class Display:
     def clear():
         subprocess.call("clear")
 
-    def create_msg(self):
+    def _create_msg(self):
         for data in self.main_data:
             text_len = len(data)
             spaces = 1
@@ -55,12 +55,12 @@ class Display:
             spaces = 1
             self.msg += f'|{" " * 1}{foot}{" " * (60 - (text_len + spaces))}|\n'
 
-    def render_display(self):
+    def _render_display(self):
         self.clear()
-        self.create_msg()
+        self._create_msg()
 
     def await_input(self):
-        self.render_display()
+        self._render_display()
         user_input = input(self.msg)
         if user_input == 'q':
             raise KeyboardInterrupt
