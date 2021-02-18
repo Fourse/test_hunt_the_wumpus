@@ -20,6 +20,7 @@ class Player(Unit):
     def __init__(self, name, special):
         super().__init__(name, special)
         self.inventory = {}
+        self.inventory_interaction()
 
     def inventory_interaction(self):
         self.inventory['weapon'] = Bow()
@@ -30,6 +31,7 @@ class Player(Unit):
             time.sleep(1)
         elif action == 'attack':
             print('Pulling the string..')
+            self.inventory['weapon'].arrows -= 1
             time.sleep(1)
 
 

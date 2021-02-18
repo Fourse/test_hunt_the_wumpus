@@ -26,11 +26,13 @@ class GameLogic:
         room = display.await_input()
         try:
             room = int(room)
-            self.process_move(world, display, room)
+            if room not in world.rooms[world.player_pos].ways_to:
+                raise ValueError
+            self.process_move(world, room)
         except ValueError:
             self.move(world, display)
 
-    def process_move(self, world, display, room):
+    def process_move(self, world, room):
         world.rooms[world.player_pos].who_in.action('move')
         where_go = world.rooms[room]
         try:
@@ -63,8 +65,24 @@ class GameLogic:
         )
 
     def attack(self, world, display):
-        print('aga')
-        raise WonGame
+        display.clear_footer()
+        display.change_footer('Where to shoot?')
+        room = display.await_input()
+        try:
+            room = int(room)
+            if room not in world.rooms[world.player_pos].ways_to:
+                raise ValueError
+            self.process_attack(world, room)
+        except ValueError:
+            self.attack(world, display)
+
+    @staticmethod
+    def process_attack(world, room):
+        world.rooms[world.player_pos].who_in.action('attack')
+        if room == world.wumpus_pos:
+            raise WonGame
+        if world.rooms[world.player_pos].who_in.inventory['weapon'].arrows == 0:
+            raise LostGame
 
     @staticmethod
     def check_cur_room(world, display):
